@@ -1,5 +1,5 @@
-import { parser } from "./parser.js";
-import { filterByLevel, filteredLogs, searchByKeyword } from "./analyzer.js";
+import { parser, stats } from "./parser.js";
+import { filteredLogs } from "./analyzer.js";
 import { rl, stream } from "./reader.js";
 
 let logs = [];
@@ -15,8 +15,11 @@ rl.on("line", (line) => {
 });
 
 rl.on("close", () => {
+    console.log(stats);
     const result = filteredLogs(logs);
-    console.log(result);
+    if (result && result.length > 0) {
+        console.log(result);
+    }
 });
 
 stream.on("error", (err) => {

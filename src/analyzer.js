@@ -1,23 +1,32 @@
 import { argv } from "node:process";
 
+const filteredStats = {
+    INFO: 0,
+    WARN: 0,
+    ERROR: 0,
+    TOTAL: 0,
+}
+
 export const filteredLogs = (logs) => {
     let filteredLogs = [];
 
     const filtered = filterByLevel(logs);
 
     if (filtered && filtered.result.length > 0) {
-        console.log(filtered.result);
-        
         if (filtered.isSearch) {
             const search = searchByKeyword(filtered.result);
-            if (search && search.length > 0) filteredLogs.push(search);
+            if (search && search.length > 0) {
+                filteredLogs.push(...search);
+
+                // console.log(filteredLogs);
+            }
         } else {
-            filteredLogs.push(filtered.result);
+            filteredLogs.push(...filtered.result);
         }
     } else {
         const searched = searchByKeyword(logs);
 
-        if (searched && searched.length > 0) filteredLogs.push(searched);
+        if (searched && searched.length > 0) filteredLogs.push(...searched);
     }
 
     return filteredLogs;
@@ -44,8 +53,6 @@ export const filterByLevel = (logs) => {
 }
 
 export const searchByKeyword = (logs) => {
-    // console.log("search logs....", logs);
-
     const searchFlag = argv.find((a) => a === "--search");
     if (!searchFlag) return null;
 
